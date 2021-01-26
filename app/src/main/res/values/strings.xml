@@ -1,17 +1,20 @@
 <resources>
     <array name="help_variant">
         <item>Помощь по хозяйству</item>
-        <item>Уход за питомцем </item>
+        <item>Уход за питомцем</item>
         <item>Поход в магазин</item>
     </array>
 
+
     <string name="answ_accept">Заявка принята!</string>
-    <string name="app_name">Help</string>
+    <string name="app_name">Помощник в кармане</string>
     <string name="title_home">Создать заявку</string>
     <string name="title_requests_volonteer">Мои заявки</string>
     <string name="title_requestion">Заявки</string>
     <string name="title_notifications">Настройки профиля</string>
     <string name="date_help">Выберите удобное для вас время</string>
+    <string name="modify_position">Позиция успешно изменена</string>
+    <string name="selected">выбрано</string>
 
     <string name="already_request">Заявка принята</string>
     <string name="wait_request">Заявка в обработке</string>
@@ -20,7 +23,30 @@
     <string name="delete_request">Удалить заявку</string>
     <string name="success_request">Заявка выполненна</string>
     <string name="inputAllView">Заполните все поля</string>
+    <string name="choose_location">выберите адрес</string>
     <string name="veteran">Ветеран</string>
     <string name="volonteer">Волонтер</string>
-    <string name="signup">Зарегистрировать</string>
+    <string name="signup">Зарегистрироваться</string>
+    <string name="registration">Регистрация</string>
+    <string name="signin">Вход</string>
+    <string name="writecode">Введите код подтверждения, который прийдёт вам по SMS</string>
+
+    <string name="notify_for_volonter">Появилась новая заявка!</string>
+    <string name="notify_for_veteran">Ваша заявка принята!</string>
+
+    <string name="add_type_help">добавить тип помощи</string>
+    <string name="all_users">Всего пользователей</string>
+    <string name="volonteers">Волонтёров</string>
+    <string name="veterans">Ветеранов</string>
+    <string name="title_dialog_admin">Создание типа помощи</string>
+    <string name="message_dialog_admin">Введите название типа помощи</string>
+    <string name="types_requests">Типы заявок</string>
+    <string name="statistics">статистика</string>
+    <string name="map_admin">карта</string>
+    <string name="all_requests">Всего заявок</string>
+    <string name="refused_requests">Отклоненных заявок</string>
+    <string name="complited_requests">исполненных</string>
+
+    <string name="choose">выбрать</string>
+    <string name="close">закрыть</string>
 </resources>

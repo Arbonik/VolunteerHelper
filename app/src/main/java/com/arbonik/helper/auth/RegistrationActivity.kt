@@ -1,63 +1,61 @@
 package com.arbonik.helper.auth
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import androidx.core.view.children
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
+import com.arbonik.helper.Map.MapsFragment
 import com.arbonik.helper.R
-import com.arbonik.helper.othertools.CheckValidate.Companion.checkDataInput
-import kotlinx.android.synthetic.main.activity_registration.*
+import com.arbonik.helper.system.Format
 
 
-class RegistrationActivity : AuthBase() {
+class RegistrationActivity : AuthBase()
+{
+    val containerButtons by lazy { findViewById<LinearLayout>(R.id.reg_cansel_choose) }
+    var mapsFragment: MapsFragment? = MapsFragment()
+    var regFragment: RegistrationFragment = RegistrationFragment()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
 
-        singInBotton.setOnClickListener { v ->
-            val allView = viewGroupRegistration.children
-            if (checkDataInput(allView)) {
-                registerUser()
-            } else
-                Toast.makeText(this, getString(R.string.inputAllView), Toast.LENGTH_LONG).show()
-        }
-    }
+        findViewById<Button>(R.id.reg_close)
+            .setOnClickListener {
+                setRegistrationFragment()
+            }
 
-    fun registerUser(){
-        mAuth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
-            .addOnCompleteListener(this) { p0 ->
-                if (p0.isSuccessful) {
-                    Toast.makeText(this, mAuth.currentUser?.uid!!, Toast.LENGTH_LONG).show()
-                    userDataFirebase.addUser(createUser(mAuth.currentUser?.uid!!))
-                    startActivity(Intent(this, SignInActivity::class.java))
-                    finish()
+        findViewById<Button>(R.id.reg_choose)
+            .setOnClickListener {
+                if (mapsFragment != null && mapsFragment!!.myMacker != null)
+                {
+                    RegData.location = Format.latLng_to_geoPoint(mapsFragment!!.myMacker!!.position)
+                    mapsFragment!!.myMacker = null
+                    setRegistrationFragment()
                 }
             }
-            .addOnFailureListener {it ->
-                Toast.makeText(this, "Ошибка регестации: ${it.message}", Toast.LENGTH_LONG).show()
-            }
+        setRegistrationFragment()
     }
 
-    override fun onStart() {
-        super.onStart()
-        val currentUser = mAuth.currentUser
-        Log.d("TAG", currentUser.toString())
+    fun setRegistrationFragment()
+    {
+        containerButtons?.visibility = View.GONE
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.activity_layout_reg, regFragment)
+            .commit()
     }
 
-    fun createUser(uid : String) = User(
-        name.text.toString(),
-        phone.text.toString(),
-        adress.text.toString(),
-        getUserCategory(),
-        uid
-    )
-
-    fun getUserCategory() : USER_CATEGORY =
-        when (role_radio_group.checkedRadioButtonId){
-            R.id.radioButtonVeteran -> USER_CATEGORY.VETERAN
-            R.id.radioButtonVolonteer -> USER_CATEGORY.VOLONTEER
-            else -> USER_CATEGORY.ADMIN
-        }
+    fun setMapFragment()
+    {
+        mapsFragment = MapsFragment()
+        if (RegData.location != null) mapsFragment!!.curLocation = Format.geoPoint_to_latLng(RegData.location!!)
+        containerButtons?.visibility = View.VISIBLE
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.activity_layout_reg, mapsFragment!!)
+            .commit()
+    }
 }
+
+

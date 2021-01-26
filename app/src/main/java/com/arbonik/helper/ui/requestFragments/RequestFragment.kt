@@ -17,8 +17,8 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-open class RequestFragment : Fragment(),
-RequestAdapter.OnRequestSelectedListener{
+open class RequestFragment : Fragment(), RequestAdapter.OnRequestSelectedListener
+{
 
     protected var firestore: FirebaseFirestore? = null
     protected var query: Query? = null
@@ -26,20 +26,25 @@ RequestAdapter.OnRequestSelectedListener{
     private var requestRecycler: RecyclerView? = null
     private var adapter: RequestAdapter? = null
 
-    init {
+    init
+    {
         firestore = FirebaseFirestore.getInstance()
         initFirestore()
     }
 
-    protected open fun initFirestore(){
+    protected open fun initFirestore()
+    {
         val fieldPath = FieldPath.of("master", "phone")
         val phone = SharedPreferenceUser.currentUser?.phone
-        query = when (SharedPreferenceUser.currentUser?.category) {
-            USER_CATEGORY.VETERAN -> {
+        query = when (SharedPreferenceUser.currentUser?.category)
+        {
+            USER_CATEGORY.VETERAN ->
+            {
                 firestore!!.collection(RequestManager.REQUEST_TAG)
                     .whereEqualTo(fieldPath, phone!!)
             }
-            USER_CATEGORY.VOLONTEER -> {
+            USER_CATEGORY.VOLONTEER ->
+            {
                 firestore!!.collection(RequestManager.REQUEST_TAG)
                     .whereEqualTo("status", false)
 
@@ -50,11 +55,8 @@ RequestAdapter.OnRequestSelectedListener{
     }
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
         val root = inflater.inflate(R.layout.fragment_reqests, container, false)
 
         requestRecycler =  root.findViewById(R.id.request_recycler_view)
@@ -63,30 +65,36 @@ RequestAdapter.OnRequestSelectedListener{
         return root
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView()
+    {
         adapter = RequestAdapter(query!!, this)
         val linear = LinearLayoutManager(context)
         requestRecycler?.layoutManager = linear
         requestRecycler?.adapter = adapter
     }
 
-    override fun onStart() {
+    override fun onStart()
+    {
         super.onStart()
         adapter?.startListening()
     }
 
-    override fun onStop() {
+    override fun onStop()
+    {
         super.onStop()
         adapter?.stopListening()
     }
 
-    override fun onRequestSelectedListener(requestData: DocumentSnapshot) {
+    override fun onRequestSelectedListener(requestData: DocumentSnapshot)
+    {
 
     }
 }
 
-class RequestVolonteerFragment : RequestFragment() {
-    override fun initFirestore() {
+class RequestVolonteerFragment : RequestFragment()
+{
+    override fun initFirestore()
+    {
         val fieldPath = FieldPath.of("accepter")
         val phone = SharedPreferenceUser.currentUser?.phone
         query = firestore!!.collection(RequestManager.REQUEST_TAG)

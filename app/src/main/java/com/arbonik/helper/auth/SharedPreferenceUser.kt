@@ -3,15 +3,20 @@ package com.arbonik.helper.auth
 import android.util.Log
 import androidx.preference.PreferenceManager
 import com.arbonik.helper.HelperApplication
+import com.google.firebase.firestore.GeoPoint
 
-class SharedPreferenceUser {
-    companion object{
+class SharedPreferenceUser
+{
+    companion object
+    {
         var currentUser :User? = null
-            get(){
+            get()
+            {
                 if (field == null)
                 {
                     var sharedPreferenceUser = SharedPreferenceUser()
-                    if (sharedPreferenceUser.checkAuth()) {
+                    if (sharedPreferenceUser.checkAuth())
+                    {
                      currentUser = sharedPreferenceUser.restoreUser()
                     }
                 }
@@ -24,42 +29,58 @@ class SharedPreferenceUser {
 
     var editor = sharedPreference.edit()
 
-    fun authInDevice(user: User){
+    fun authInDevice(user: User)
+    {
         currentUser = user
-        with(editor) {
+        with(editor)
+        {
             putBoolean(User.TAG_AUTH, true)
             putString(User.NAME_TAG, user.name)
             putString(User.TAG_UID, user.uid)
-            putString(User.TAG_ADDRESS, user.address)
+            putString(User.INF_TAG, user.inf)
+            putString(User.TAG_LOCATION_LAT, user.location?.latitude.toString())
+            putString(User.TAG_LOCATION_LON, user.location?.longitude.toString())
             putString(User.TAG_PHONE, user.phone)
             putString(User.TAG_CATEGORY, user.category.toString())
+            putFloat(User.RATING_TAG, user.rating.toString().toFloat())
+            putBoolean(User.TAG_NOTFICATION, user.notification.toString().toBoolean())
             Log.d("TESTTEXT", "LOGININ")
             apply()
         }
     }
 
-    fun checkAuth():Boolean{
+    fun checkAuth():Boolean
+    {
         Log.d("TESTTEXT","LOGINCHECK")
         return PreferenceManager.getDefaultSharedPreferences(HelperApplication.globalContext)
             .getBoolean(User.TAG_AUTH, false)
     }
 
-    fun loginOut(){
+    fun loginOut()
+    {
         Log.d("TESTTEXT","LOGINOUT")
         currentUser = null
             editor.putBoolean(User.TAG_AUTH, false)
             editor.apply()
     }
 
-    fun restoreUser():User{
-       var sharedPreference= PreferenceManager.getDefaultSharedPreferences(HelperApplication.globalContext)
-            with(sharedPreference){
-            return@restoreUser User(
-                getString(User.NAME_TAG,""),
-                getString(User.TAG_PHONE,""),
-                getString(User.TAG_ADDRESS,""),
-                USER_CATEGORY_CREATER(getString(User.TAG_CATEGORY,"")!!),
-                getString(User.TAG_UID,""))
+    fun restoreUser(): User
+    {
+       var sharedPreference = PreferenceManager.getDefaultSharedPreferences(HelperApplication.globalContext)
+            with(sharedPreference)
+            {
+                return@restoreUser User(
+                    getString(User.NAME_TAG,""),
+                    getString(User.TAG_PHONE,""),
+                    getString(User.INF_TAG,""),
+                    USER_CATEGORY_CREATER(getString(User.TAG_CATEGORY,"")!!),
+                    getFloat(User.RATING_TAG,-1f),
+                    getString(User.TAG_UID,""),
+                    getBoolean(User.TAG_NOTFICATION,true))
+                    GeoPoint(
+                        getString(User.TAG_LOCATION_LAT,"")!!.toDouble(),
+                        getString(User.TAG_LOCATION_LON,"")!!.toDouble()
+                    )
             }
-        }
+    }
 }

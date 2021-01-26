@@ -13,9 +13,11 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 
 open class RequestAdapter(_query : Query, _listener : OnRequestSelectedListener)
-    : FirestoreAdapter<RequestAdapter.ViewHolder>(_query) {
+    : FirestoreAdapter<RequestAdapter.ViewHolder>(_query)
+{
 
-    interface OnRequestSelectedListener{
+    interface OnRequestSelectedListener
+    {
         fun onRequestSelectedListener(requestData: DocumentSnapshot)
     }
 
@@ -25,46 +27,53 @@ open class RequestAdapter(_query : Query, _listener : OnRequestSelectedListener)
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewHolder {
+    ): ViewHolder
+    {
         val inflater = LayoutInflater.from(parent.context)
         val vh : ViewHolder =
             ViewHolder(inflater.inflate(R.layout.data_request, parent, false))
         return vh
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int)
+    {
         holder.bind(snapshots[position], listener)
     }
 
-        inner class ViewHolder(item: View) : RecyclerView.ViewHolder(item){
+        inner class ViewHolder(item: View) : RecyclerView.ViewHolder(item)
+        {
+             var dateView: TextView = item.findViewById(R.id.date_data)
+             var titleView: TextView = item.findViewById(R.id.title_data)
+             var nameView: TextView = item.findViewById(R.id.name_data)
+             var numberView: TextView = item.findViewById(R.id.number_data)
+             var commentView: TextView = item.findViewById(R.id.comment_data)
+             var infView: TextView = item.findViewById(R.id.inf_data)
+             var statusView: TextView = item.findViewById(R.id.status)
+             val button : Button = item.findViewById(R.id.button_data)
 
-            var dateView: TextView = item.findViewById(R.id.date_data)
-            var titleView: TextView = item.findViewById(R.id.title_data)
-            var nameView: TextView = item.findViewById(R.id.name_data)
-            var addressView: TextView = item.findViewById(R.id.address_data)
-            var numberView: TextView = item.findViewById(R.id.number_data)
-            var commentView: TextView = item.findViewById(R.id.comment_data)
-            var statusView: TextView = item.findViewById(R.id.status)
-            val button : Button = item.findViewById(R.id.button_data)
-
-            fun bind(snapshot : DocumentSnapshot, listener : OnRequestSelectedListener){
+            fun bind(snapshot : DocumentSnapshot, listener : OnRequestSelectedListener)
+            {
                 val requestData = snapshot.toObject(RequestData::class.java)
                     requestData?.let {
                         dateView.setText(it.date)
                         titleView.setText(it.title)
                         nameView.setText(it.master.name)
-                        addressView.setText(it.master.address)
                         numberView.setText(it.master.phone)
                         commentView.setText(it.comment)
-                        when (userCategory){
-                            USER_CATEGORY.VETERAN -> {
+                        infView.setText(it.master.inf)
+
+                        when (userCategory)
+                        {
+                            USER_CATEGORY.VETERAN ->
+                            {
                                 statusView.text = if (it.status) "Заявка принята" else "Заявка обрабатывается"
                                 button.text = if (it.status) "Заявка исполнена" else "Отозвать заявку"
                                 button.setOnClickListener { v->
                                     snapshot.reference.delete()
                                 }
                             }
-                            USER_CATEGORY.VOLONTEER -> {
+                            USER_CATEGORY.VOLONTEER ->
+                            {
                                 statusView.text = if (it.status) "Заявка принята" else "Заявка обрабатывается"
                                 button.text = if (it.status) "Отказаться от заявки" else "Принять заявку"
                                 button.setOnClickListener { v->
@@ -87,5 +96,5 @@ open class RequestAdapter(_query : Query, _listener : OnRequestSelectedListener)
                     listener.onRequestSelectedListener(snapshot)
                 }
             }
-    }
+        }
 }
